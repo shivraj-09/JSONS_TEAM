@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SupportAI — Intelligent Customer Support</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <div class="brand-icon">✦</div>
+
+                <div>
+                    <h1>SupportAI</h1>
+                    <span>Intelligent Support Agent</span>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <div class="status-dot"></div>
+
+                <div>
+                    <strong>AI Agent Online</strong>
+                    <span>Ready to assist customers</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+
+                <p class="section-label">CAPABILITIES</p>
+
+                <div class="capability">
+                    <span>◈</span>
+                    <div>
+                        <strong>Query Classification</strong>
+                        <small>Automatically identify issues</small>
+                    </div>
+                </div>
+
+                <div class="capability">
+                    <span>◉</span>
+                    <div>
+                        <strong>Urgency Detection</strong>
+                        <small>Prioritize critical cases</small>
+                    </div>
+                </div>
+
+                <div class="capability">
+                    <span>↗</span>
+                    <div>
+                        <strong>Smart Escalation</strong>
+                        <small>Route cases to humans</small>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="sidebar-footer">
+                <span>Powered by</span>
+                <strong>AI + OpenRouter</strong>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <!-- HEADER -->
+            <header class="topbar">
+
+                <div>
+                    <p class="eyebrow">CUSTOMER SUPPORT</p>
+                    <h2>AI Support Console</h2>
+                </div>
+
+                <div class="system-status">
+                    <span></span>
+                    System Operational
+                </div>
+
+            </header>
+
+
+            <!-- CONTENT -->
+            <section class="content">
+
+                <!-- CHAT PANEL -->
+                <div class="chat-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Customer Conversation</h3>
+                            <p>Describe your issue and our AI agent will analyze it.</p>
+                        </div>
+
+                        <div class="bot-avatar">✦</div>
+                    </div>
+
+
+                    <div id="chatMessages" class="chat-messages">
+
+                        <div class="message ai-message">
+
+                            <div class="avatar">✦</div>
+
+                            <div class="bubble">
+                                <span class="message-label">SupportAI</span>
+
+                                <p>
+                                    Hello! I'm your AI customer support assistant.
+                                    Tell me what you're experiencing and I'll
+                                    analyze the issue and help resolve it.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="input-area">
+
+                        <textarea
+                            id="queryInput"
+                            placeholder="Describe your issue..."
+                            rows="2"
+                        ></textarea>
+
+                        <button id="sendButton" onclick="sendQuery()">
+                            <span>Analyze & Send</span>
+                            <span>➜</span>
+                        </button>
+
+                    </div>
+
+                    <div class="input-hint">
+                        AI automatically detects category, urgency, sentiment and escalation requirements.
+                    </div>
+
+                </div>
+
+
+                <!-- ANALYSIS PANEL -->
+                <div class="analysis-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>AI Analysis</h3>
+                            <p>Real-time decision intelligence</p>
+                        </div>
+
+                        <div class="pulse-icon">●</div>
+                    </div>
+
+
+                    <div id="emptyState" class="empty-state">
+
+                        <div class="empty-icon">✦</div>
+
+                        <h4>Waiting for a query</h4>
+
+                        <p>
+                            Send a customer message to see
+                            the AI's analysis here.
+                        </p>
+
+                    </div>
+
+
+                    <div id="analysisContent" class="analysis-content hidden">
+
+                        <div class="metrics">
+
+                            <div class="metric">
+                                <span>Category</span>
+                                <strong id="category">—</strong>
+                            </div>
+
+                            <div class="metric">
+                                <span>Urgency</span>
+                                <strong id="urgency">—</strong>
+                            </div>
+
+                            <div class="metric">
+                                <span>Sentiment</span>
+                                <strong id="sentiment">—</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div id="decisionBox" class="decision-box">
+
+                            <div class="decision-icon">✓</div>
+
+                            <div>
+                                <span>DECISION</span>
+                                <strong id="decision">Auto-resolved</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div id="ticketBox" class="ticket-box hidden">
+
+                            <div class="ticket-header">
+                                <span>🎫</span>
+                                <strong>Escalation Ticket</strong>
+                            </div>
+
+                            <div class="ticket-id" id="ticketId">
+                                TKT---------
+                            </div>
+
+                            <div class="ticket-details">
+
+                                <div>
+                                    <span>Priority</span>
+                                    <strong id="ticketPriority">—</strong>
+                                </div>
+
+                                <div>
+                                    <span>Assigned to</span>
+                                    <strong id="ticketTeam">—</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="reason-box">
+
+                            <span>ESCALATION REASON</span>
+
+                            <p id="reason">
+                                No escalation required.
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
