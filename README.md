@@ -1,42 +1,114 @@
 # 🤖 AI Customer Support System
 
-> ### Understand. Prioritize. Respond. Escalate.
+> Understand. Prioritize. Respond. Escalate.
 
-An AI-powered customer support agent that reads a raw customer message, understands its intent and sentiment, determines urgency, generates a contextual response, and decides whether the case should be escalated to a human.
+Short 2–3 line description
 
-The system combines **LLM-based understanding** with **deterministic escalation logic** to create a transparent and auditable support-triage workflow.
-
----
-
-<div align="center">
-
-### 🧠 AI-Powered Support Triage
-
-**Classify** · **Prioritize** · **Respond** · **Escalate**
-
-</div>
-
----
+[Key badges / tech stack]
 
 ## 🚀 What does it do?
 
-A customer support inbox can contain everything from a simple question to a potentially fraudulent transaction.
+Problem + solution
+Example ticket → AI analysis
 
-Treating every message equally creates two major problems:
+## ✨ Key Features
 
-- ⏳ **Triage is slow** — humans must read every ticket before understanding its urgency.
-- 🎭 **Responses are inconsistent** — response quality and tone can vary between support agents.
+- 🧠 Query Classification
+- 🚨 Urgency Detection
+- 💬 Contextual Response Generation
+- 🔀 Smart Human Escalation
+- 📊 Real-time Support Dashboard
 
-Our system automates the **first pass of customer support**.
+## 🔄 AI Agent Workflow
 
-Given a message such as:
+Customer Query
+      ↓
+Classification
+      ↓
+Response Generation
+      ↓
+Escalation Engine
+      ↓
+Ticket + Dashboard
 
-> *"Someone hacked my account and made an unauthorized payment!"*
+## 🧠 How the AI Works
 
-the system can determine:
+### 1. Classification
+...
+### 2. Response Generation
+...
+### 3. Deterministic Escalation
+...
 
-```text
-Category      → Security / Fraud
-Urgency       → CRITICAL
-Sentiment     → Angry
-Escalation    → REQUIRED
+## 🎯 Why This Approach?
+
+Explain why LLM + rules instead of one giant prompt.
+
+## 🖥️ Dashboard
+
+Explain what the UI shows:
+- Total tickets
+- Escalated tickets
+- Critical cases
+- Category distribution
+- Urgency distribution
+- Live ticket history
+
+## 🏗️ Architecture
+
+Backend → Gemini → Rule Engine → API → Dashboard
+
+## 🛠️ Tech Stack
+
+Python
+Flask
+Gemini API
+HTML/CSS/JS
+Chart.js
+
+## 🔌 API Endpoints
+
+POST /api/analyze
+GET /api/tickets
+GET /api/health
+
+## ⚡ Getting Started
+
+Installation instructions
+
+## 🧪 Example
+
+Input:
+"Someone hacked my account..."
+
+Output:
+Category → Security/Fraud
+Urgency → Critical
+Sentiment → Angry
+Escalation → Required
+
+## 📁 Project Structure
+
+...
+    
+## 🔐 Security & Design Considerations
+
+.env
+deterministic escalation
+no API key in frontend
+
+## 🚧 Limitations & Future Improvements
+
+SQLite/PostgreSQL
+authentication
+persistent ticket storage
+human-agent workflow
+etc.
+
+## 🏆 Why It Matters
+
+Short closing pitch
+
+## 👥 Team
+
+...
