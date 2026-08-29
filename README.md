@@ -1,181 +1,111 @@
 # 🤖 AI Customer Support System
 
-> Understand. Prioritize. Respond. Escalate.
+> ### Understand. Prioritize. Respond. Escalate.
 
-Short 2–3 line description
+An AI-powered customer support agent that transforms raw customer messages into **structured, actionable support decisions**.
 
-[Key badges / tech stack]
+It understands the customer's issue, detects urgency and sentiment, generates a contextual response, and determines whether the case requires **human intervention**.
 
-## 🚀 What does it do?
+<br>
 
-Problem + solution
-Example ticket → AI analysis
+<div align="center">
+
+**🧠 Classify** &nbsp; • &nbsp;
+**🚨 Prioritize** &nbsp; • &nbsp;
+**💬 Respond** &nbsp; • &nbsp;
+**🔀 Escalate**
+
+</div>
+
+---
+
+## 🚀 What Does It Do?
+
+Modern support teams receive thousands of messages ranging from simple product questions to urgent billing disputes and potential security incidents.
+
+Manually processing every message creates two major problems:
+
+- ⏳ **Slow triage** — humans must read every ticket before understanding its urgency.
+- 🎭 **Inconsistent responses** — tone and response quality can vary between support agents.
+
+**Our system automates the first layer of customer support while keeping humans in control of high-risk cases.**
+
+### Example
+
+**Customer message**
+
+> "Someone hacked my account and made an unauthorized payment!"
+
+### AI Analysis
+
+| Signal | Result |
+|---|---|
+| 🏷️ Category | **Security / Fraud** |
+| 🚨 Urgency | **CRITICAL** |
+| 😡 Sentiment | **Angry** |
+| 🔀 Escalation | **REQUIRED** |
+
+The system then generates an appropriate customer-facing response and creates an escalation ticket for the human support team.
+
+---
 
 ## ✨ Key Features
 
-- 🧠 Query Classification
-- 🚨 Urgency Detection
-- 💬 Contextual Response Generation
-- 🔀 Smart Human Escalation
-- 📊 Real-time Support Dashboard
+### 🧠 Intelligent Query Classification
+Automatically identifies the type of customer issue and extracts structured support signals.
+
+### 🚨 Urgency Detection
+Ranks tickets from **Low → Medium → High → Critical**, allowing support teams to focus on the cases that matter most.
+
+### 😡 Sentiment Analysis
+Detects customer sentiment and adapts the response accordingly.
+
+### 💬 Contextual Response Generation
+Generates a customer-facing response using the original message together with its AI classification.
+
+### 🔀 Smart Human Escalation
+High-risk cases are automatically routed toward human support using explicit, deterministic rules.
+
+### 📊 Real-Time Support Dashboard
+Provides a visual overview of the support queue, including ticket statistics, classifications, urgency levels, and escalation status.
+
+---
 
 ## 🔄 AI Agent Workflow
 
-Customer Query
-      ↓
-Classification
-      ↓
-Response Generation
-      ↓
-Escalation Engine
-      ↓
-Ticket + Dashboard
-
-## 🧠 How the AI Works
-
-### 1. Classification
-...
-### 2. Response Generation
-...
-### 3. Deterministic Escalation
-...
-
-## 🎯 Why This Approach?
-
-Explain why LLM + rules instead of one giant prompt.
-
-## 🖥️ Dashboard
-
-Explain what the UI shows:
-- Total tickets
-- Escalated tickets
-- Critical cases
-- Category distribution
-- Urgency distribution
-- Live ticket history
-
-## 🏗️ Architecture
-
-Backend → Gemini → Rule Engine → API → Dashboard
-
-## 🛠️ Tech Stack
-
-Python
-Flask
-Gemini API
-HTML/CSS/JS
-Chart.js
-
-## 🔌 API Endpoints
-
-POST /api/analyze
-GET /api/tickets
-GET /api/health
-
-## ⚡ Getting Started
-
-Installation instructions
-
-## 🧪 Example
-
-Input:
-"Someone hacked my account..."
-
-Output:
-Category → Security/Fraud
-Urgency → Critical
-Sentiment → Angry
-Escalation → Required
-
-## 📁 Project Structure
-
-...
-    
-## 🔐 Security & Design Considerations
-
-.env
-deterministic escalation
-no API key in frontend
-
-## 🚧 Limitations & Future Improvements
-
-SQLite/PostgreSQL
-authentication
-persistent ticket storage
-human-agent workflow
-etc.
-
-## 🏆 Why It Matters
-
-## 🏆 Why It Matters
-
-Customer support shouldn't force humans to choose between speed and quality.
-
-Our system handles the repetitive first layer of support automatically — understanding what customers need, prioritizing urgent cases, drafting contextual responses, and routing high-risk situations to humans.
-
-**The goal isn't to replace support teams. It's to make them faster, more consistent, and better equipped to focus on the cases that actually need human judgment.**
-
-## 👥 Team
-
-JSON'S TEAM
-1.SHIVRAJ NIRLOTI
-2.SHAURYA DARNE
-
-## ⚡ Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/shivraj-09/JSONS_TEAM.git
-cd JSONS_TEAM
-
-### 2. Setup the backend
-
-cd backend
-
-python -m venv venv
-
-windows - venv\Scripts\activate
-mac - source venv/bin/activate
-
-pip install -r requirements.txt
-
-3. Configure the Gemini API
-
-Create a .env file inside the backend folder:
-
-GEMINI_API_KEY=your_api_key_here
-
-4. Start the backend
-
-From the backend directory:
-
-python app.py
-
-The API will run at:
-
-http://127.0.0.1:5000
-5. Start the frontend
-
-Open a new terminal:
-
-cd frontend
-python -m http.server 5500
-
-Then open:
-
-http://127.0.0.1:5500
-6. Test the system
-
-Try a query such as:
-
-Someone hacked my account and made an unauthorized payment!
-
-The system will automatically:
-
-🧠 Classify the issue
-🚨 Determine urgency
-😡 Analyze sentiment
-💬 Generate a contextual response
-🔀 Decide whether human escalation is required
-📊 Update the support dashboard
+```text
+                 CUSTOMER MESSAGE
+                        │
+                        ▼
+              ┌───────────────────┐
+              │  1. CLASSIFY      │
+              │                   │
+              │ Category           │
+              │ Urgency            │
+              │ Sentiment          │
+              │ Reasoning          │
+              └─────────┬─────────┘
+                        │
+                        ▼
+              ┌───────────────────┐
+              │  2. RESPOND       │
+              │                   │
+              │ Contextual AI     │
+              │ Response          │
+              └─────────┬─────────┘
+                        │
+                        ▼
+              ┌───────────────────┐
+              │  3. ESCALATE      │
+              │                   │
+              │ Deterministic     │
+              │ Rule Engine       │
+              └─────────┬─────────┘
+                        │
+                        ▼
+                 ┌──────────────┐
+                 │ TICKET OBJECT│
+                 └──────┬───────┘
+                        │
+                        ▼
+                SUPPORT DASHBOARD
