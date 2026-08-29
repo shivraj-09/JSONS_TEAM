@@ -52,21 +52,27 @@ The system then generates an appropriate customer-facing response and creates an
 ## ✨ Key Features
 
 ### 🧠 Intelligent Query Classification
+
 Automatically identifies the type of customer issue and extracts structured support signals.
 
 ### 🚨 Urgency Detection
+
 Ranks tickets from **Low → Medium → High → Critical**, allowing support teams to focus on the cases that matter most.
 
 ### 😡 Sentiment Analysis
+
 Detects customer sentiment and adapts the response accordingly.
 
 ### 💬 Contextual Response Generation
+
 Generates a customer-facing response using the original message together with its AI classification.
 
 ### 🔀 Smart Human Escalation
+
 High-risk cases are automatically routed toward human support using explicit, deterministic rules.
 
 ### 📊 Real-Time Support Dashboard
+
 Provides a visual overview of the support queue, including ticket statistics, classifications, urgency levels, and escalation status.
 
 ---
@@ -78,28 +84,28 @@ Provides a visual overview of the support queue, including ticket statistics, cl
                         │
                         ▼
               ┌───────────────────┐
-              │  1. CLASSIFY      │
+              │   1. CLASSIFY     │
               │                   │
-              │ Category           │
-              │ Urgency            │
-              │ Sentiment          │
-              │ Reasoning          │
+              │   Category        │
+              │   Urgency         │
+              │   Sentiment       │
+              │   Reasoning       │
               └─────────┬─────────┘
                         │
                         ▼
               ┌───────────────────┐
-              │  2. RESPOND       │
+              │   2. RESPOND      │
               │                   │
-              │ Contextual AI     │
-              │ Response          │
+              │   Contextual AI   │
+              │   Response        │
               └─────────┬─────────┘
                         │
                         ▼
               ┌───────────────────┐
-              │  3. ESCALATE      │
+              │   3. ESCALATE     │
               │                   │
-              │ Deterministic     │
-              │ Rule Engine       │
+              │   Deterministic   │
+              │   Rule Engine     │
               └─────────┬─────────┘
                         │
                         ▼
@@ -110,282 +116,337 @@ Provides a visual overview of the support queue, including ticket statistics, cl
                         ▼
                 SUPPORT DASHBOARD
 
-🧠 How the AI Works
-1. Classification
+## 🧠 How the AI Works
 
-The first AI stage analyzes the customer's message and produces structured information:
+### 1. Classification
 
-{
-  "category": "security_fraud",
-  "urgency": "critical",
-  "sentiment": "angry",
-  "reasoning": "The customer reports an unauthorized payment and possible account compromise."
-}
+The first AI stage analyzes the customer's message and extracts three key signals:
 
-The structured output allows the rest of the system to make consistent decisions without parsing free-form AI responses.
+- **Category** — billing, technical, account, product, complaint, security/fraud, or general
+- **Urgency** — low, medium, high, or critical
+- **Sentiment** — positive, neutral, negative, or angry
 
-2. Response Generation
+The model also provides a short reasoning for the urgency classification.
 
-A second AI stage receives:
+### 2. Contextual Response Generation
 
-The original customer message
-The detected category
-The urgency
-The sentiment
+A second Gemini call generates the customer-facing response.
 
-This allows the response tone to adapt to the situation.
+Instead of generating a generic reply, the model receives the original query **along with the classification results**, allowing it to adapt its response based on:
 
-For example:
+- Customer sentiment
+- Urgency level
+- Type of issue
+- Required support context
 
-Neutral + Low urgency
-        ↓
-Informative response
+For example, a critical security complaint receives a more empathetic and action-oriented response than a routine product question.
 
-Angry + Critical urgency
-        ↓
-Empathetic + urgent response
-        + human escalation
+### 3. Deterministic Escalation
 
-The system therefore separates understanding the problem from communicating the solution.
-
-3. Deterministic Escalation
-
-Escalation is intentionally handled by code rather than another LLM decision.
-
-ESCALATION_RULES = {
-    "critical": True,
-    "high": True,
-    "medium": False,
-    "low": False
-}
-
-ANGRY_SENTIMENT_ESCALATES = True
+Escalation is intentionally handled by **Python rules rather than another LLM decision**.
 
 A ticket is escalated when:
 
-Urgency = CRITICAL
-        OR
-Urgency = HIGH
-        OR
+```text
+Urgency = HIGH or CRITICAL
+OR
 Sentiment = ANGRY
-Why?
+```
 
-Escalation is a high-impact decision.
+This makes the most important routing decision:
 
-A deterministic rule is:
+- predictable
+- auditable
+- testable
+- independent of model wording
 
-✅ Predictable
-✅ Auditable
-✅ Testable
-✅ Easy to modify
-✅ Independent of LLM randomness
+The AI understands the ticket.  
+**The rule engine decides what happens next.**
 
-The LLM determines what the customer is experiencing.
+---
 
-The rule engine determines what the system should do about it.
+## 🎯 Why This Approach?
 
-🎯 Why This Architecture?
+Instead of using one large prompt to classify, respond, and escalate everything at once, the system separates the workflow into specialized stages.
 
-Instead of asking one large LLM prompt to perform everything, the system separates the workflow into independent stages.
+| Approach | Advantage |
+|---|---|
+| **LLM Classification** | Understands intent, urgency, and sentiment from natural language |
+| **Separate Response Generation** | Produces responses specifically informed by the classification |
+| **Deterministic Rules** | Makes escalation predictable and auditable |
+| **Structured JSON Output** | Allows the dashboard and backend to reliably consume AI results |
 
-Design Decision	Why?
-🧠 Separate classification	Makes AI decisions structured and inspectable
-💬 Separate response generation	Allows response tone to explicitly depend on classification
-🔀 Rule-based escalation	Prevents critical routing decisions from depending entirely on LLM judgment
-📦 JSON output	Makes AI results easy for the backend and dashboard to consume
-🎨 Fixed classification values	Keeps dashboard visualizations and ticket filtering consistent
-🗄️ In-memory ticket log	Keeps the prototype simple while allowing future database integration
+This hybrid architecture combines the flexibility of an LLM with the reliability of traditional application logic.
 
-This makes the system easier to debug, evaluate, and extend.
+> **AI handles understanding. Code handles decisions that must be predictable.**
 
-🖥️ Support Dashboard
+---
 
-The project includes a live support dashboard designed to give support teams an immediate overview of their queue.
+## 🖥️ Support Dashboard
 
-Dashboard includes
-📊 Total tickets
-🚨 Escalated tickets
-🔴 Critical cases
-✅ Handled cases
-🏷️ Category distribution
-📈 Urgency distribution
-💬 Customer conversation
-🧠 AI analysis
-🔀 Escalation tickets
-🕐 Live ticket history
+The project includes a live support dashboard that gives support teams an immediate overview of incoming cases.
 
-The latest customer interaction and its AI analysis are displayed directly in the support console.
+### 📊 Dashboard Insights
 
-🏗️ System Architecture
-┌─────────────────────┐
-│    Customer Query   │
-└──────────┬──────────┘
+- **Total Tickets** — number of analyzed customer queries
+- **Escalated Tickets** — cases requiring human attention
+- **Critical Cases** — highest-priority customer issues
+- **Handled Tickets** — cases processed by the AI pipeline
+- **Category Distribution** — visual breakdown of support issues
+- **Urgency Distribution** — low → critical ticket distribution
+- **Live Ticket History** — reverse-chronological view of analyzed cases
+- **AI Analysis Panel** — classification, sentiment, urgency, and escalation reasoning
+- **Generated Response** — contextual response produced for the customer
+
+The dashboard transforms raw AI output into an interface that a support team can actually use.
+
+---
+
+## 🏗️ System Architecture
+
+```text
+┌──────────────────────┐
+│    Customer Query    │
+└──────────┬───────────┘
            │
            ▼
-┌─────────────────────┐
-│    Flask Backend    │
-└──────────┬──────────┘
+┌──────────────────────┐
+│  Gemini Classifier   │
+│                      │
+│ Category             │
+│ Urgency              │
+│ Sentiment            │
+│ Reasoning            │
+└──────────┬───────────┘
            │
            ▼
-┌─────────────────────┐
-│     Gemini API       │
-│                     │
-│  Classification     │
-│  Response Generation│
-└──────────┬──────────┘
+┌──────────────────────┐
+│ Response Generator   │
+│       Gemini         │
+│                      │
+│ Contextual Reply     │
+└──────────┬───────────┘
            │
            ▼
-┌─────────────────────┐
-│  Escalation Engine  │
-│                     │
-│ Deterministic Rules │
-└──────────┬──────────┘
+┌──────────────────────┐
+│  Escalation Engine   │
+│   Deterministic      │
+│       Rules          │
+└──────────┬───────────┘
            │
            ▼
-┌─────────────────────┐
-│     Ticket Log      │
-└──────────┬──────────┘
+┌──────────────────────┐
+│     Ticket Object    │
+│                      │
+│ Query + Analysis +   │
+│ Response + Escalation│
+└──────────┬───────────┘
            │
            ▼
-┌─────────────────────┐
-│   Support Dashboard │
-│                     │
-│ HTML / CSS / JS     │
-│      Chart.js       │
-└─────────────────────┘
-🛠️ Tech Stack
-Technology	Purpose
-🐍 Python 3	Backend logic
-🌶️ Flask	REST API
-🧠 Gemini API	Classification & response generation
-🔐 python-dotenv	Environment variable management
-🌐 HTML / CSS / JavaScript	Frontend dashboard
-📊 Chart.js	Dashboard visualizations
-🔗 Flask-CORS	Frontend/backend communication
-🔌 API Endpoints
-Method	Endpoint	Description
-POST	/api/analyze	Analyze a customer message and create a ticket
-GET	/api/tickets	Retrieve the ticket log
-GET	/api/health	Check backend health
-POST /api/analyze
+┌──────────────────────┐
+│     Flask REST API   │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│   Support Dashboard  │
+│   HTML/CSS/JS        │
+│      + Chart.js      │
+└──────────────────────┘
+```
 
-Example request:
+---
 
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| **Python 3** | Core backend logic |
+| **Flask** | REST API and server |
+| **Google Gemini API** | Classification & response generation |
+| **google-generativeai** | Gemini Python SDK |
+| **HTML / CSS / JavaScript** | Frontend dashboard |
+| **Chart.js** | Support analytics and visualizations |
+| **python-dotenv** | Secure environment variable loading |
+
+---
+
+## 🔌 API Endpoints
+
+### `POST /api/analyze`
+
+Analyzes a new customer support message.
+
+**Input:**
+```json
 {
-  "message": "Someone hacked my account and made an unauthorized payment!"
+  "query": "Someone hacked my account and made an unauthorized payment!"
 }
+```
 
-The endpoint runs the complete pipeline:
+**Returns:**
+- AI classification
+- urgency
+- sentiment
+- generated response
+- escalation decision
+- escalation reason
+- updated ticket log
 
-Message
-   ↓
-Classification
-   ↓
-Response Generation
-   ↓
-Escalation Decision
-   ↓
-Ticket
-⚡ Getting Started
+### `GET /api/tickets`
 
-Follow these steps to run the project locally.
+Returns the current ticket history.
 
-1. Clone the repository
+Used by the dashboard to restore the support queue after a page refresh.
+
+### `GET /api/health`
+
+Basic backend health check.
+
+Useful for verifying that the Flask server is running correctly.
+
+---
+
+## ⚡ Getting Started
+
+### Prerequisites
+
+Make sure you have:
+
+- Python 3.x
+- Git
+- A Google Gemini API key
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/shivraj-09/JSONS_TEAM.git
 cd JSONS_TEAM
-2. Set up the backend
+```
 
-Navigate to the backend:
+### 2. Create and Activate the Virtual Environment
 
+**Windows:**
+
+```bash
 cd backend
-
-Create a virtual environment:
-
 python -m venv venv
-Windows
 venv\Scripts\activate
-macOS / Linux
+```
+
+**macOS / Linux:**
+
+```bash
+cd backend
+python3 -m venv venv
 source venv/bin/activate
+```
 
-Install dependencies:
+### 3. Install Dependencies
 
+```bash
 pip install -r requirements.txt
-3. Configure the Gemini API
+```
 
-Create a file named:
+### 4. Configure the Gemini API
 
-backend/.env
+Create a `.env` file inside the `backend` directory:
 
-Add your Gemini API key:
-
+```env
 GEMINI_API_KEY=your_api_key_here
+```
 
-⚠️ Never commit your .env file to GitHub.
+> ⚠️ Never commit your `.env` file to GitHub. Your API key should remain private.
 
-Your API key should remain private.
+### 5. Start the Backend
 
-4. Start the backend
+From the `backend` directory:
 
-From the backend directory:
-
+```bash
 python app.py
+```
 
-The backend will run at:
+The Flask API will start at:
 
+```text
 http://127.0.0.1:5000
+```
 
-You can verify that the server is running using:
+### 6. Start the Frontend
 
-http://127.0.0.1:5000/api/health
-5. Start the frontend
+Open a **new terminal** and run:
 
-Open a new terminal.
-
-Navigate to the frontend:
-
+```bash
 cd frontend
-
-Start a local server:
-
 python -m http.server 5500
+```
 
-Open the dashboard:
+Then open:
 
+```text
 http://127.0.0.1:5500
-6. Test the system
+```
 
-Try entering:
+### 7. Test the System
 
+Try submitting:
+
+```text
 Someone hacked my account and made an unauthorized payment!
+```
 
-The system should automatically:
+The system will:
 
+```text
 🧠 Classify the issue
-        ↓
+      ↓
 🚨 Determine urgency
-        ↓
+      ↓
 😡 Analyze sentiment
-        ↓
+      ↓
 💬 Generate a contextual response
-        ↓
-🔀 Determine escalation
-        ↓
+      ↓
+🔀 Determine human escalation
+      ↓
 📊 Update the dashboard
-🧪 Example
-Input
+```
 
-"I've been charged twice this month and nobody has replied to me!"
+---
 
-Expected AI Analysis
-Category    → Billing
-Urgency     → High
-Sentiment   → Angry
-Escalation  → Required
-Generated Response
+## 🧪 Example
 
-The response-generation agent creates an empathetic response that acknowledges the billing issue and its urgency while directing the case toward appropriate human support.
+### Customer Input
 
-📁 Project Structure
+> "Someone hacked my account and made an unauthorized payment!"
+
+### AI Analysis
+
+```text
+Category      → Security / Fraud
+Urgency       → CRITICAL
+Sentiment     → Angry
+Escalation    → REQUIRED
+```
+
+### Generated Response
+
+The system generates an empathetic, action-oriented response that acknowledges the security incident, requests relevant information, and prioritizes the case for human review.
+
+### Why Escalate?
+
+```text
+Urgency = CRITICAL
+        ↓
+Human escalation required
+```
+
+This demonstrates how the AI and deterministic rule engine work together.
+
+---
+
+## 📁 Project Structure
+
+```text
 JSONS_TEAM/
 │
 ├── backend/
@@ -397,87 +458,85 @@ JSONS_TEAM/
 ├── frontend/
 │   ├── index.html
 │   ├── style.css
-│   ├── script.js
-│   └── ...
+│   └── script.js
 │
+├── HANDOVER.md
 ├── README.md
-└── HANDOVER.md
+└── ...
+```
 
-.env should remain local and must not be committed to the repository.
+> `.env` is used locally for the Gemini API key and should **not** be committed to the repository.
 
-🔐 Security & Design Considerations
-API Key Protection
+---
 
-The Gemini API key is loaded from an environment variable rather than being exposed in frontend JavaScript.
+## 🔐 Security & Design Considerations
 
-.env
- ↓
-Backend
- ↓
-Gemini API
-Deterministic Escalation
+### 🔑 API Key Protection
 
-Critical support decisions are handled by explicit backend rules rather than relying entirely on model-generated decisions.
+The Gemini API key is stored in an environment variable and accessed only by the backend.
 
-Human-in-the-Loop
+The frontend never receives the API key.
 
-The system is designed to assist support teams, not replace them.
+### 🧩 Deterministic Escalation
 
-High-risk cases are surfaced for human intervention.
+Critical routing decisions are handled by explicit application logic instead of relying entirely on LLM judgment.
 
-🚧 Limitations & Future Improvements
+### 📦 Structured AI Output
 
-This project is currently designed as a working prototype.
+Classification uses predefined categories and urgency/sentiment values, making downstream processing more reliable.
 
-Planned improvements
-🗄️ Persistent ticket storage using SQLite/PostgreSQL
-🔐 User authentication and role-based access
-👨‍💼 Dedicated human-agent workspace
-🔔 Real-time notifications for critical tickets
-📚 Knowledge-base / RAG integration
-📈 Advanced support analytics
-🧾 Persistent conversation history
-🔄 Ticket status management
-☁️ Production deployment
-🧪 Automated evaluation of classification accuracy
+### ⚠️ Prototype Scope
 
-The current architecture intentionally keeps these components replaceable without changing the core AI workflow.
+This is a hackathon/prototype implementation. Production deployment would require additional security, authentication, persistence, monitoring, and access controls.
 
-🧩 Key Engineering Principle
+---
 
-Use AI where interpretation is required. Use deterministic code where decisions must be predictable.
+## 🚧 Limitations & Future Improvements
 
-The LLM handles:
+The current system intentionally keeps the implementation lightweight so the complete workflow can be demonstrated end-to-end.
 
-"What is happening?"
-"What does the customer need?"
-"How should we respond?"
+Future improvements could include:
 
-The rule engine handles:
+- 🗄️ **Persistent storage** using SQLite or PostgreSQL
+- 🔐 **Authentication & role-based access**
+- 👨‍💻 **Human-agent workspace** for escalated tickets
+- 🔔 **Real-time notifications** for critical cases
+- 📚 **Knowledge-base integration** for grounded responses
+- 🧠 **Conversation memory** across multiple customer messages
+- 📈 **Advanced support analytics**
+- 🔄 **Ticket status management** — Open / In Progress / Resolved
+- 🌐 **Production deployment**
+- 🛡️ **Rate limiting, logging, and monitoring**
 
-"Does this require human escalation?"
+---
 
-This separation provides a balance between AI flexibility and system reliability.
+## 🏆 Why It Matters
 
-🏆 Why It Matters
+Customer support shouldn't force teams to choose between **speed and quality**.
 
-Customer support shouldn't force humans to choose between speed and quality.
+Our system automates the repetitive first layer of support — understanding what customers need, identifying urgent situations, generating contextual responses, and routing high-risk cases to humans.
 
-Our system automates the repetitive first layer of support — understanding customer needs, prioritizing urgent cases, drafting contextual responses, and routing high-risk situations to humans.
+**The goal isn't to replace support teams.**
 
-The goal isn't to replace support teams. It's to make them faster, more consistent, and better equipped to focus on the cases that actually need human judgment.
+It's to make them **faster, more consistent, and better equipped to focus human attention where it matters most.**
 
-👥 Team
-JSON'S TEAM
+> **Let AI handle the first pass. Let humans handle the moments that matter.**
 
-1. Shivraj Nirloti
-2. Shaurya Darne
+---
 
-<div align="center">
-🤖 AI Customer Support System
+## 👥 Team
 
-Understand. Prioritize. Respond. Escalate.
+### JSON'S TEAM
 
-Built with ❤️ for intelligent, human-centered customer support.
+**Shivraj Nirloti**  
+**Shaurya Darne**
 
-</div> ```
+Built as an AI-powered customer support automation prototype.
+
+---
+
+## ⭐ Project Vision
+
+> **Understand every customer. Prioritize what matters. Respond intelligently. Escalate responsibly.**
+
+**AI Customer Support System — turning an overwhelming support queue into an intelligent, prioritized workflow.**
